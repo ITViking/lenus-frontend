@@ -7,10 +7,7 @@ export default class LineChart extends React.Component {
     super(props);
 
     this.state = {
-      series: [{
-          name: "Desktops",
-          data: [130, 131, 125, 121, 122, 123, 118, 109, 110]
-      }],
+      series: [],
       options: {
         chart: {
           height: 350,
@@ -26,7 +23,7 @@ export default class LineChart extends React.Component {
           enabled: false
         },
         stroke: {
-          curve: 'straight'
+          curve: 'smooth'
         },
         title: {
           text: 'Weight development',
@@ -39,18 +36,31 @@ export default class LineChart extends React.Component {
           },
         },
         xaxis: {
+          type: 'datetime',
           categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
         }
       },
     };
   }
 
-
-
   render() {
+    function getSeries(dataEntries) {
+      if(dataEntries.length === 0) return [];
+
+      return [{
+        name: "Weight",
+        data: dataEntries.map(entry => { 
+          return {
+            x: entry.createdAt,
+            y: entry.weight
+          }
+        })
+      }]
+    };
+
     return (
       <div id="chart">
-        <Chart options={this.state.options} series={this.state.series} type="line" height={350} />
+        <Chart options={this.state.options} series={getSeries(this.props.dataEntries)} type="line" height={350} />
       </div>
     );
   }
